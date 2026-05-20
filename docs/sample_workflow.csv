@@ -1,0 +1,5 @@
+task_name,start_time,end_time,assigned_to
+Design,10:00,11:30,Alice
+Development,11:30,15:00,Bob
+Testing,15:30,18:00,Carol
+Fix Bugs,18:30,20:00,Bob

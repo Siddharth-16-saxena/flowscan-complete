@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+.dart_tool/
+.packages
+build/
+
+# Environment
+.env
+.env.local
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Flutter generated platform/build files can be regenerated.
+apps/mobile/.flutter-plugins
+apps/mobile/.flutter-plugins-dependencies
+apps/mobile/android/.gradle/
+apps/mobile/ios/Pods/

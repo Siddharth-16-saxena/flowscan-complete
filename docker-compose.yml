@@ -1,0 +1,83 @@
+version: "3.9"
+
+services:
+  # ── MongoDB ────────────────────────────────────────────
+  mongodb:
+    image: mongo:7.0
+    container_name: purescan_mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: purescan
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── AI Service (FastAPI) ───────────────────────────────
+  ai-service:
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    container_name: purescan_ai
+    restart: unless-stopped
+    environment:
+      PORT: 8000
+      HOST: 0.0.0.0
+      LOG_LEVEL: info
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  # ── Backend (Express) ──────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: purescan_backend
+    restart: unless-stopped
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      ai-service:
+        condition: service_healthy
+    environment:
+      PORT: 5000
+      MONGODB_URI: mongodb://mongodb:27017/purescan
+      AI_SERVICE_URL: http://ai-service:8000
+      NODE_ENV: production
+      UPLOAD_DIR: uploads/
+    ports:
+      - "5000:5000"
+    volumes:
+      - uploads_data:/app/uploads
+
+  # ── Frontend (Next.js) ─────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:5000
+        NEXT_PUBLIC_AI_URL: http://localhost:8000
+    container_name: purescan_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:5000
+      NEXT_PUBLIC_AI_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+
+volumes:
+  mongo_data:
+  uploads_data:

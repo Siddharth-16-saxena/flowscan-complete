@@ -1,0 +1,8 @@
+{
+  "tasks": [
+    { "task_name": "Design",      "start_time": "10:00", "end_time": "11:30", "assigned_to": "Alice" },
+    { "task_name": "Development", "start_time": "11:30", "end_time": "15:00", "assigned_to": "Bob"   },
+    { "task_name": "Testing",     "start_time": "15:30", "end_time": "18:00", "assigned_to": "Carol" },
+    { "task_name": "Fix Bugs",    "start_time": "18:30", "end_time": "20:00", "assigned_to": "Bob"   }
+  ]
+}

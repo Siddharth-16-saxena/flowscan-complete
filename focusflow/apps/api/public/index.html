@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FocusFlow</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">F</div>
+          <div>
+            <p class="eyebrow">FocusFlow</p>
+            <h1>Attention, with some taste.</h1>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <button class="nav-link active" data-panel="dashboard">
+            <span>Home</span>
+            <small>Today and weekly view</small>
+          </button>
+          <button class="nav-link" data-panel="focus">
+            <span>Focus</span>
+            <small>Session cockpit</small>
+          </button>
+          <button class="nav-link" data-panel="analytics">
+            <span>Analytics</span>
+            <small>Signals and trends</small>
+          </button>
+          <button class="nav-link" data-panel="insights">
+            <span>Insights</span>
+            <small>Behavior guidance</small>
+          </button>
+          <button class="nav-link" data-panel="settings">
+            <span>Settings</span>
+            <small>Preferences and stack</small>
+          </button>
+        </nav>
+
+        <article class="sidebar-card">
+          <div class="sidebar-card-head">
+            <h2>Connected stack</h2>
+            <span class="status-dot live"></span>
+          </div>
+          <div id="tooling-list" class="tooling-list">
+            <p class="empty-copy">Checking installed tools...</p>
+          </div>
+        </article>
+      </aside>
+
+      <main class="content">
+        <section class="hero">
+          <div class="hero-copy">
+            <span class="eyebrow">Flutter + Firebase ready</span>
+            <h2>See the pattern, start the session, recover the day.</h2>
+            <p id="hero-copy">
+              FocusFlow now reflects the stack you installed: Flutter for mobile, Firebase for data, Android Studio for devices, and this Node API for the product cockpit.
+            </p>
+          </div>
+          <div class="hero-actions">
+            <button id="seed-demo" class="primary">Load realistic sample day</button>
+            <button id="evaluate-nudge" class="secondary">Evaluate smart nudge</button>
+          </div>
+        </section>
+
+        <section class="panel active" id="panel-dashboard">
+          <div class="dashboard-grid">
+            <article class="feature-card highlight-card">
+              <div class="card-head">
+                <div>
+                  <p class="section-tag">Today</p>
+                  <h3>Focus command deck</h3>
+                </div>
+                <span id="focus-score-pill" class="pill">Focus Score 0%</span>
+              </div>
+              <div class="metrics-band">
+                <div class="metric">
+                  <span class="metric-label">Focus</span>
+                  <strong id="metric-focus">0 min</strong>
+                </div>
+                <div class="metric">
+                  <span class="metric-label">Distraction</span>
+                  <strong id="metric-distraction">0 min</strong>
+                </div>
+                <div class="metric">
+                  <span class="metric-label">Sessions</span>
+                  <strong id="metric-sessions">0</strong>
+                </div>
+              </div>
+              <div class="progress-area">
+                <div class="progress-track">
+                  <div id="focus-progress-bar" class="progress-fill"></div>
+                </div>
+                <p id="focus-progress-copy" class="support-copy">No focus signal yet.</p>
+              </div>
+            </article>
+
+            <article class="feature-card">
+              <div class="card-head">
+                <div>
+                  <p class="section-tag">Next best move</p>
+                  <h3>Behavior guidance</h3>
+                </div>
+                <span id="consistency-pill" class="pill muted">Consistency 0%</span>
+              </div>
+              <p id="primary-insight-copy" class="lead-copy">Load demo data to generate your first insight.</p>
+              <div class="weekly-grid">
+                <div>
+                  <span class="metric-label">Weekly focus</span>
+                  <strong id="weekly-focus">0 min</strong>
+                </div>
+                <div>
+                  <span class="metric-label">Weekly drift</span>
+                  <strong id="weekly-distraction">0 min</strong>
+                </div>
+                <div>
+                  <span class="metric-label">Completion</span>
+                  <strong id="weekly-completion">0%</strong>
+                </div>
+              </div>
+            </article>
+
+            <article class="feature-card">
+              <div class="card-head">
+                <div>
+                  <p class="section-tag">Environment</p>
+                  <h3>Permission readiness</h3>
+                </div>
+              </div>
+              <div id="permission-health" class="signal-grid"></div>
+            </article>
+
+            <article class="feature-card">
+              <div class="card-head">
+                <div>
+                  <p class="section-tag">Distraction rhythm</p>
+                  <h3>Hot hours</h3>
+                </div>
+              </div>
+              <div id="hourly-heatmap" class="heatmap"></div>
+              <p id="heatmap-caption" class="support-copy">No usage summary yet.</p>
+            </article>
+
+            <article class="feature-card span-two build-card">
+              <div class="card-head">
+                <div>
+                  <p class="section-tag">Installed stack</p>
+                  <h3>Build pipeline is connected</h3>
+                </div>
+                <span class="pill">Mobile ready</span>
+              </div>
+              <div id="stack-strip" class="stack-strip"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" id="panel-focus">
+          <div class="focus-grid">
+            <article class="feature-card focus-cockpit">
+              <div class="card-head">
+                <div>
+                  <p class="section-tag">Focus cockpit</p>
+                  <h3>Timer preview</h3>
+                </div>
+                <span id="session-state-pill" class="pill">Ready</span>
+              </div>
+              <div class="timer-stage">
+                <div id="timer-ring" class="timer-ring">
+                  <div class="timer-core">
+                    <span id="timer-display">25:00</span>
+                    <small id="timer-caption">Pomodoro preview</small>
+                  </div>
+                </div>
+              </div>
+              <form id="session-form" class="form-grid">
+                <label>
+                  Planned minutes
+                  <input name="plannedDurationMinutes" type="number" min="1" value="25" />
+                </label>
+                <label>
+                  Actual minutes
+                  <input name="actualDurationMinutes" type="number" min="0" value="25" />
+                </label>
+                <label>
+                  Interruptions
+                  <input name="interruptionCount" type="number" min="0" value="0" />
+                </label>
+                <label class="checkbox full-span">
+                  <input name="completed" type="checkbox" checked />
+                  Completed as planned
+                </label>
+                <div class="button-row full-span">
+                  <button id="preview-timer" class="secondary" type="button">Preview timer</button>
+                  <button class="primary" type="submit">Save session</button>
+                </div>
+              </form>
+            </article>
+
+            <article class="feature-card">
+              <div class="card-head">
+                <div>
+                  <p class="section-tag">Recent log</p>
+                  <h3>Session history</h3>
+                </div>
+              </div>
+              <div id="session-list" class="timeline-list empty">No sessions yet.</div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" id="panel-analytics">
+          <div class="analytics-grid">
+            <article class="feature-card">
+              <div class="card-head">
+                <div>
+                  <p class="section-tag">Daily signal</p>
+                  <h3>Operational metrics</h3>
+                </div>
+              </div>
+              <div id="daily-analytics" class="stat-list"></div>
+            </article>
+
+            <article class="feature-card">
+              <div class="card-head">
+                <div>
+                  <p class="section-tag">Weekly signal</p>
+                  <h3>Trend quality</h3>
+                </div>
+              </div>
+              <div id="weekly-analytics" class="stat-list"></div>
+            </article>
+
+            <article class="feature-card span-two">
+              <div class="card-head">
+                <div>
+                  <p class="section-tag">Recommendation</p>
+                  <h3>Interpretation lane</h3>
+                </div>
+              </div>
+              <div id="trend-summary" class="summary-panel">
+                Your analytics summary will appear here once sessions and usage are available.
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" id="panel-insights">
+          <div class="analytics-grid">
+            <article class="feature-card">
+              <div class="card-head">
+                <div>
+                  <p class="section-tag">Active insights</p>
+                  <h3>Patterns worth acting on</h3>
+                </div>
+              </div>
+              <div id="insights-list" class="timeline-list empty">No insights yet.</div>
+            </article>
+            <article class="feature-card">
+              <div class="card-head">
+                <div>
+                  <p class="section-tag">Nudges</p>
+                  <h3>Context-aware prompts</h3>
+                </div>
+              </div>
+              <div id="nudges-list" class="timeline-list empty">No nudges yet.</div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" id="panel-settings">
+          <div class="analytics-grid">
+            <article class="feature-card">
+              <div class="card-head">
+                <div>
+                  <p class="section-tag">Preferences</p>
+                  <h3>Session defaults</h3>
+                </div>
+              </div>
+              <form id="settings-form" class="stack">
+                <label>
+                  Default focus duration
+                  <input name="defaultFocusDurationMinutes" type="number" min="1" value="25" />
+                </label>
+                <label>
+                  Default break duration
+                  <input name="defaultBreakDurationMinutes" type="number" min="1" value="5" />
+                </label>
+                <label>
+                  Late-night threshold hour
+                  <input name="lateNightThresholdHour" type="number" min="0" max="23" value="23" />
+                </label>
+                <label>
+                  Nudge sensitivity
+                  <select name="nudgeSensitivity">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                </label>
+                <button class="primary" type="submit">Save preferences</button>
+              </form>
+            </article>
+
+            <article class="feature-card">
+              <div class="card-head">
+                <div>
+                  <p class="section-tag">Permissions</p>
+                  <h3>Tracking readiness</h3>
+                </div>
+              </div>
+              <form id="permissions-form" class="stack">
+                <label class="checkbox">
+                  <input name="usageAccessGranted" type="checkbox" />
+                  Usage access granted
+                </label>
+                <label class="checkbox">
+                  <input name="notificationPermissionGranted" type="checkbox" />
+                  Notifications allowed
+                </label>
+                <label class="checkbox">
+                  <input name="batteryOptimizationIgnored" type="checkbox" />
+                  Battery optimization relaxed
+                </label>
+                <button class="primary" type="submit">Save permissions</button>
+              </form>
+              <div id="permissions-summary" class="stat-list summary"></div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+  </html>
