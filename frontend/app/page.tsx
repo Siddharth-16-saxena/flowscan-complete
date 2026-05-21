@@ -393,9 +393,6 @@ export default function PureScanPage() {
     diet: 'balanced',
     condition: 'diabetes',
   })
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const streamRef = useRef<MediaStream | null>(null)
-
   // Fetch recent scans on load
   const fetchRecentScans = async () => {
     try {
@@ -572,53 +569,73 @@ export default function PureScanPage() {
 
   async function openCamera() {
     setError('')
-    if (!window.BarcodeDetector) {
-      setError('Camera barcode detection is not supported in this browser. Use manual entry for now.')
-      return
-    }
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-      streamRef.current = stream
-      setCameraOpen(true)
-      if (videoRef.current) videoRef.current.srcObject = stream
-    } catch {
-      setError('Camera permission was blocked. Manual barcode input still works.')
-    }
+    setCameraOpen(true)
   }
 
   function closeCamera() {
-    streamRef.current?.getTracks().forEach((track) => track.stop())
-    streamRef.current = null
     setCameraOpen(false)
   }
 
   useEffect(() => {
-    if (!cameraOpen || !videoRef.current || !window.BarcodeDetector) return
+    if (!cameraOpen) return
 
-    let cancelled = false
-    const detector = new window.BarcodeDetector({ formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'qr_code'] })
+    let html5Qrcode: any = null
+    let isStopped = false
 
-    async function tick() {
-      if (cancelled || !videoRef.current) return
-      try {
-        const codes = await detector.detect(videoRef.current)
-        if (codes?.[0]?.rawValue) {
-          const detected = codes[0].rawValue
-          synth.playScan()
-          setBarcode(detected)
-          closeCamera()
-          analyze(detected)
-          return
-        }
-      } catch {
-        // Camera support varies by browser.
-      }
-      requestAnimationFrame(tick)
-    }
+    import('html5-qrcode')
+      .then(({ Html5Qrcode }) => {
+        if (isStopped) return
+        html5Qrcode = new Html5Qrcode('reader')
+        html5Qrcode
+          .start(
+            { facingMode: 'environment' },
+            {
+              fps: 10,
+              qrbox: (width: number, height: number) => {
+                const size = Math.min(width, height) * 0.7
+                return { width: size, height: size * 0.6 }
+              },
+            },
+            (decodedText: string) => {
+              synth.playScan()
+              setBarcode(decodedText)
+              if (html5Qrcode && html5Qrcode.isScanning) {
+                html5Qrcode
+                  .stop()
+                  .then(() => {
+                    setCameraOpen(false)
+                    analyze(decodedText)
+                  })
+                  .catch((err: any) => {
+                    console.error('Failed to stop scanning after success:', err)
+                    setCameraOpen(false)
+                    analyze(decodedText)
+                  })
+              }
+            },
+            () => {
+              // Silent scan failure on frame search
+            }
+          )
+          .catch((err: any) => {
+            console.error('Camera start failed:', err)
+            setError('Failed to start camera. Please verify permissions.')
+            setCameraOpen(false)
+          })
+      })
+      .catch((err) => {
+        console.error('Failed to import html5-qrcode dynamically:', err)
+        setError('Failed to load scanner library.')
+        setCameraOpen(false)
+      })
 
-    tick()
     return () => {
-      cancelled = true
+      isStopped = true
+      if (html5Qrcode && html5Qrcode.isScanning) {
+        html5Qrcode.stop().catch((err: any) => {
+          console.error('Failed to stop scanner on cleanup:', err)
+        })
+      }
     }
   }, [cameraOpen])
 
@@ -938,7 +955,7 @@ export default function PureScanPage() {
                     <X size={16} />
                   </button>
                 </div>
-                <video ref={videoRef} autoPlay muted playsInline className="aspect-video w-full rounded-md bg-black object-cover border-2 border-slate-900" />
+                <div id="reader" className="aspect-video w-full rounded-md bg-black border-2 border-slate-900 overflow-hidden relative" />
               </div>
             )}
 

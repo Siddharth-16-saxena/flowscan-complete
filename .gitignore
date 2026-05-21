@@ -82,3 +82,7 @@ Desktop.ini
 .flutter-plugins-dependencies
 apps/mobile/android/.gradle/
 apps/mobile/ios/Pods/
+
+# Build caching
+*.tsbuildinfo
+
