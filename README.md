@@ -141,7 +141,7 @@ Environment:
 ```env
 NEXT_PUBLIC_API_URL=https://your-purescan-backend.onrender.com
 ```
-
+https://flowscan-complete.vercel.app/
 Build command:
 
 ```bash
@@ -161,3 +161,4 @@ Try these in the input box:
 ## Notes
 
 PureScan uses Open Food Facts community data, so results are decision-support signals, not medical advice. The AI service currently uses an explainable rule-based model that can later be upgraded to a Scikit-learn classifier trained on labeled ingredient risk data.
+#
